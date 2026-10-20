@@ -1,4 +1,5 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
+
 
 app = FastAPI()
 #API that returns a hardcoded weather response. 
@@ -9,6 +10,20 @@ app = FastAPI()
 #4) weatherAPI repsonse
 #5) save cashed response
 cache={}
+@app.post("/weather")
+def post_weather(
+    city: str = Query(..., min_length=1),
+    temperature: str = Query(...),
+    condition: str = Query(..., min_length=1),
+):
+    weather = {
+        "city": city,
+        "temperature": temperature,
+        "condition": condition,
+    }
+    cache[city] = weather
+    return weather
+
 
 @app.get("/weather")
 def get_weather(city: str):
